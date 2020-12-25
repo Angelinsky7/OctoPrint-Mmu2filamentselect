@@ -15,11 +15,13 @@ class MMU2SelectPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Setting
 		self._active = False
 		self._timer = None
 		self._timeout = 0
+		self._default_command = -1
 		self._txTriggered = False
 		self._selectedTool = None
 
 	def initialize(self):
 		self._timeout = self._settings.get([b"timeout"])
+		self._default_command = self._settings.get([b"default_command"])
 
 	#~ queuing handling
 
@@ -54,14 +56,20 @@ class MMU2SelectPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Setting
 	def on_settings_save(self, data):
 		try:
 			data[b"timeout"]=int(data[b"timeout"])
+			data[b"default_command"]=int(data[b"default_command"])
 		except:
 			data[b"timeout"]=30
+			data[b"default_command"]=-1
 
 		if data[b"timeout"] < 0:
 			data[b"timeout"]=30
 
+		if data[b"default_command"] < -1 or data[b"default_command"] > 4:
+			data[b"timeout"]=-1
+
 		octoprint.plugin.SettingsPlugin.on_settings_save(self, data)
 		self._timeout = self._settings.get([b"timeout"])
+		self._default_command = self._settings.get([b"default_command"])
 
 	#~ TemplatePlugin
 
@@ -86,8 +94,11 @@ class MMU2SelectPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Setting
 		self._plugin_manager.send_plugin_message(self._identifier, dict(action="show"))
 
 	def _timeout_prompt(self):
-		self._printer.commands("Tx", tags={"mmu2Plugin:choose_filament_resend"})
-		self._clean_up_prompt()
+		if self._default_command >= 0 and self._default_command <= 4:
+			_done_prompt(self,  self._default_command)
+		else:
+			self._printer.commands("Tx", tags={"mmu2Plugin:choose_filament_resend"})
+			self._clean_up_prompt()
 
 	def _done_prompt(self, command, tags=set()):
 		self._selectedTool = command
