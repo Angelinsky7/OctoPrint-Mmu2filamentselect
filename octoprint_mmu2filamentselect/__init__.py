@@ -56,9 +56,12 @@ class MMU2SelectPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Setting
 	def on_settings_save(self, data):
 		try:
 			data[b"timeout"]=int(data[b"timeout"])
-			data[b"default_command"]=int(data[b"default_command"])
 		except:
 			data[b"timeout"]=30
+
+		try:
+			data[b"default_command"]=int(data[b"default_command"])
+		except:
 			data[b"default_command"]=-1
 
 		if data[b"timeout"] < 0:
