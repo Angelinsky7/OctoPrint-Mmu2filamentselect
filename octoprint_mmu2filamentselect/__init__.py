@@ -98,12 +98,15 @@ class MMU2SelectPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Setting
 
 	def _timeout_prompt(self):
 		if self._default_command >= 0 and self._default_command <= 4:
+			self._logger.info("Auto selecting MMU2 tool after timeout : " + self._default_command)
 			_done_prompt(self,  self._default_command)
 		else:
+			self._logger.info("Reverting to default behavior, selection direclty on the printer")
 			self._printer.commands("Tx", tags={"mmu2Plugin:choose_filament_resend"})
 			self._clean_up_prompt()
 
 	def _done_prompt(self, command, tags=set()):
+		self._logger.info("Sending selected tool to MMU2 printer : " + command)
 		self._selectedTool = command
 		self._txTriggered = True
 		self._clean_up_prompt()
