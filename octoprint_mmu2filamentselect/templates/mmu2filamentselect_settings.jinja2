@@ -9,4 +9,20 @@
             <span class="help-block"><small>{{ _('After this given time, the dialog closes and the print will go on as usual. This means you have to select the filament at your printer.') }}</small></span>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label">{{ _('Default Command') }}</label>
+        <div class="controls">
+        <div class="input-append">
+            <select class="input-mini text-right" class="input-block-level" data-bind="value: settings.plugins.mmu2filamentselect.default_command">
+                <option value="-1">{{ _('Disabled') }}</option>
+                <option value="0">{{ _('Filament 1') }}</option>
+                <option value="1">{{ _('Filament 2') }}</option>
+                <option value="2">{{ _('Filament 3') }}</option>
+                <option value="3">{{ _('Filament 4') }}</option>
+                <option value="4">{{ _('Filament 5') }}</option>
+            </select>
+			</div>
+            <span class="help-block"><small>{{ _('By default no tool will be selected (-1), otherwise the selected tool (0,1,2,3,4) will be sent to the printer when the timeout occurs.') }}</small></span>
+        </div>
+    </div>
 </form>
