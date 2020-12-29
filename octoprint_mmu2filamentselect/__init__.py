@@ -97,10 +97,8 @@ class MMU2SelectPlugin(octoprint.plugin.TemplatePlugin, octoprint.plugin.Setting
 		self._plugin_manager.send_plugin_message(self._identifier, dict(action="show"))
 
 	def _timeout_prompt(self):
-		self._logger.info("Timeout finished...")
-
 		if self._default_command >= 0 and self._default_command <= 4:
-			self._logger.info("Auto selecting MMU2 tool after timeout : " + self._default_command)
+			self._logger.info("Auto selecting MMU2 tool after timeout : " + str(self._default_command))
 			self._done_prompt("T" + str(self._default_command))
 		else:
 			self._logger.info("Reverting to default behavior, selection direclty on the printer")
